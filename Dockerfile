@@ -1,4 +1,4 @@
 FROM sandrokeil/typescript
 
-RUN apt-get -y update
-RUN apt-get install -y ffmpeg
+RUN sudo apt-get -y update
+RUN sudo apt-get install -y ffmpeg
