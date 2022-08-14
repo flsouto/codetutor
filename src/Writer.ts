@@ -2,21 +2,18 @@ import * as gd from 'node-gd'
 
 export default class Writer{
 
-    public img
     public fontPath = '/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf'
     public fontHeight = 25
     public fontSize = 18
     public lineNumber = 1
 
-    constructor(img){
-        this.img = img
-    }
+    constructor(public img : gd.Image){}
 
     public getHeightOffset(){
         return this.fontHeight * this.lineNumber
     }
 
-    async writeLn(lineString: String){
+    async writeLn(lineString: string){
 
         const color = this.img.colorAllocate(0, 255, 0);
         const imgs = []
