@@ -16,7 +16,7 @@ export default class VideoRenderer{
         pixelFormat: 'yuv420p'
     }
 
-    options(merge){
+    setOptions(merge){
         this.options = {...this.options, ...merge}
         return this
     }

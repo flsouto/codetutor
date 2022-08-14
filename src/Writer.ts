@@ -1,4 +1,4 @@
-import gd from 'node-gd'
+import * as gd from 'node-gd'
 
 export default class Writer{
 
@@ -45,12 +45,12 @@ export default class Writer{
 
     }
 
-}
+    static async create(){
+        const img = await gd.create(1200, 800)
+        img.colorAllocate(0, 0, 0);
+        return new Writer(img)
+    }
 
-Writer.create = async() => {
-    const img = await gd.create(1200, 800)
-    img.colorAllocate(0, 0, 0);
-    return new Writer(img)
-}
+    static imgCounter = 0
 
-Writer.imgCounter = 0
+}
