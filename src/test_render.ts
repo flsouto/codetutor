@@ -3,7 +3,7 @@ import Writer from './Writer'
 
 async function main(){
 
-    const str: String = `<html>
+    let str: String = `<html>
             <head>
                     {head}
             </head>
@@ -12,8 +12,7 @@ async function main(){
             </body>
     </html>
     `
-
-    const w = await Writer.create()
+    const w = new Writer()
     const imgs = []
     for(const line of str.split("\n")){
         const result = await w.writeLn(line)
@@ -21,7 +20,8 @@ async function main(){
     }
 
     const vr = new VideoRenderer()
-    vr.render(imgs)
+    vr.framerate = 10
+    vr.render("results/*.png")
 
 }
 
