@@ -25,7 +25,7 @@ export default class Writer{
         return clone
     }
 
-    async writeLn(line: string) : string[]{
+    async writeLn(line: string) : Promise<string[]>{
 
         const imgs = []
 

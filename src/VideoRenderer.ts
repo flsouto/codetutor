@@ -10,7 +10,7 @@ export default class VideoRenderer{
         return this
     }
 
-    setFrameRate(val:int){
+    setFrameRate(val:number){
         this.framerate = val
         return this
     }
