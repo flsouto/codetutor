@@ -32,15 +32,14 @@ export default class Writer{
         let tmpLine = ""
         let tmpImg = null
 
-        for(const c of line.split('')){
+        const write = async (s:string) => {
 
             if(tmpImg){
                 tmpImg.destroy()
             }
 
-            tmpLine += c
-
             tmpImg = this.cloneImg()
+
             const color = tmpImg.colorAllocate(0, 255, 0);
 
             tmpImg.stringFT(
@@ -61,6 +60,18 @@ export default class Writer{
 
             imgs.push(saveAs)
 
+        }
+
+        const chars = line.split('')
+
+        while(chars.length > 0 && chars[0] === ' '){
+            tmpLine += ' '
+            chars.shift()
+        }
+
+        for(const c of chars){
+            tmpLine += c
+            await write(tmpLine)
         }
 
         if(tmpImg){
