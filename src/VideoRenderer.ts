@@ -1,12 +1,34 @@
-import {exec} from 'child_process'
+import {execSync} from 'child_process'
 
 export default class VideoRenderer{
 
-    public framerate = 30
+    private framerate = 30
+    private audio
+
+    setAudio(audio:string){
+        this.audio = audio
+        return this
+    }
+
+    setFrameRate(val:int){
+        this.framerate = val
+        return this
+    }
 
     render(glob: string, save_as : string = 'results/output.mp4'){
-        const cmd = `ffmpeg -framerate ${this.framerate} -pattern_type glob -i '${glob}' -c:v libx264 -pix_fmt yuv420p ${save_as}`
+        let cmd = [
+            `rm ${save_as} 2>/dev/null;`,
+            "ffmpeg",
+            "-framerate",
+            this.framerate,
+            `-pattern_type glob -i '${glob}'`,
+            (this.audio && `-i ${this.audio}`),
+            "-c:v libx264",
+            "-pix_fmt yuv420p",
+            save_as
+        ].join(" ")
+
         console.log("running cmd: ", cmd)
-        exec(cmd)
+        execSync(cmd)
     }
 }

@@ -1,5 +1,6 @@
 import VideoRenderer from './VideoRenderer'
 import Writer from './Writer'
+import {execSync} from 'child_process'
 
 async function main(){
 
@@ -19,8 +20,12 @@ async function main(){
         imgs.push(...result)
     }
 
+    let say = "this is the basic structure of an HTML page"
+    execSync(`echo "${say}" | text2wave > results/say.wav`)
+
     const vr = new VideoRenderer()
-    vr.framerate = 10
+    vr.setFrameRate(10)
+    vr.setAudio(`results/say.wav`)
     vr.render("results/*.png")
 
 }
