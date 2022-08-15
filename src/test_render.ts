@@ -20,11 +20,11 @@ async function main(){
         imgs.push(...result)
     }
 
-    let say = "this is the basic structure of an HTML page"
+    let say = "I'm going to start by adding the basic structure of our HTML page. It looks boring at first, but hang in there, as this is going to become more complex in a minute!"
     execSync(`echo "${say}" | text2wave > results/say.wav`)
-
+    const dur = parseFloat(execSync(`soxi -D results/say.wav`))
     const vr = new VideoRenderer()
-    vr.setFrameRate(10)
+    vr.setFrameRate(imgs.length/dur)
     vr.setAudio(`results/say.wav`)
     vr.render("results/*.png")
 

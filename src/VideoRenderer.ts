@@ -2,7 +2,7 @@ import {execSync} from 'child_process'
 
 export default class VideoRenderer{
 
-    private framerate = 30
+    private frameRate = 30
     private audio
 
     setAudio(audio:string){
@@ -10,8 +10,8 @@ export default class VideoRenderer{
         return this
     }
 
-    setFrameRate(val:number){
-        this.framerate = val
+    setFrameRate(rate:number){
+        this.frameRate = rate
         return this
     }
 
@@ -20,7 +20,7 @@ export default class VideoRenderer{
             `rm ${save_as} 2>/dev/null;`,
             "ffmpeg",
             "-framerate",
-            this.framerate,
+            this.frameRate,
             `-pattern_type glob -i '${glob}'`,
             (this.audio && `-i ${this.audio}`),
             "-c:v libx264",
