@@ -5,8 +5,8 @@ export default class VideoRenderer{
     private frameRate = 30
     private audio
 
-    setAudio(audio:string){
-        this.audio = audio
+    setAudio(audio:string|Spoken){
+        this.audio = audio instanceof Spoken ? audio.file : audio
         return this
     }
 
