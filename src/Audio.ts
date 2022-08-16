@@ -3,9 +3,10 @@ import {existsSync} from 'fs'
 
 export default class Audio{
 
-    constructor(public file : string){
-        if(!existsSync(file)){
-            throw new Error(`file not found: ${file}`)
+    constructor(audio : string|Audio){
+        this.file = audio instanceof Audio ? audio.file : audio
+        if(!existsSync(this.file)){
+            throw new Error(`file not found: ${this.file}`)
         }
     }
 
@@ -14,7 +15,7 @@ export default class Audio{
         return `/tmp/${id}.wav`
     }
 
-    add(audio:Audio){
+    add(audio:string|Audio){
         const newf = Audio.tmpf
         execSync(`sox ${this} ${audio} ${newf}`)
         return new Audio(newf)
@@ -43,8 +44,14 @@ export default class Audio{
         return this.mod(`rate ${value}`)
     }
 
+    remix(audio:string|Audio){
+        const tmpf = Audio.tmpf
+        execSync(`sox -M ${audio} ${this.file} ${tmpf} remix -m 1,3,2,3`)
+        return new Audio(tmpf)
+    }
+
     save(file:string){
-        execSync(`mv ${this.file} ${file}`)
+        execSync(`cp ${this.file} ${file}`)
         this.file = file
     }
 
