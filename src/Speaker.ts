@@ -4,7 +4,7 @@ export default class Speaker{
 
     speak(text){
         execSync(`echo "${text}" | text2wave > results/say.wav`)
-        const dur = parseFloat(execSync(`soxi -D results/say.wav`))
+        const dur = parseFloat(execSync(`soxi -D results/say.wav`).toString())
         execSync(`sox results/say.wav results/say-fixed.wav rate 44100`)
         return new Spoken(text, 'results/say-fixed.wav', dur)
     }

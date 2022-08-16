@@ -1,4 +1,5 @@
 import {execSync} from 'child_process'
+import {Spoken} from './Speaker'
 
 export default class VideoRenderer{
 
