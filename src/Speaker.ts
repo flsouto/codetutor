@@ -1,22 +1,26 @@
 import {execSync} from 'child_process'
+import Audio from './Audio'
 
 export default class Speaker{
 
     speak(text){
-        execSync(`echo "${text}" | text2wave > results/say.wav`)
-        const dur = parseFloat(execSync(`soxi -D results/say.wav`).toString())
-        execSync(`sox results/say.wav results/say-fixed.wav rate 44100`)
-        return new Spoken(text, 'results/say-fixed.wav', dur)
+        const tmpf = Audio.tmpf
+        execSync(`echo "${text}" | text2wave > ${tmpf}`)
+        const audio = new Audio(tmpf).rate(44100)
+        return new Spoken(text, audio)
     }
 
 }
 
 export class Spoken{
-    constructor(public text, public file, public duration){}
+    constructor(public text, public audio: Audio){}
     addBackground(bkg,rpad=1){
-        const dur = this.duration + rpad
-        execSync(`sox ${bkg} results/bkg.wav trim 0 ${dur}`)
-        execSync(`sox -M results/bkg.wav ${this.file} results/say-with-bkg.wav remix -m 1,3,2,3`)
-        return new Spoken(this.text, 'results/say-with-bkg.wav', dur)
+        const remixed = new Audio(bkg)
+            .trim(0, this.audio.len + 1)
+            .remix(this.audio)
+        return new Spoken(
+            this.text,
+            remixed
+        )
     }
 }
