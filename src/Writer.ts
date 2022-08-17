@@ -7,12 +7,17 @@ export default class Writer{
     public fontHeight = 25
     public fontSize = 18
     public lineNumber = 1
+    public outputDir = 'results'
 
     static imgCounter = 0
 
     constructor(public width=1200, public height=800, public bkg=[0,0,0]){
         this.img = gd.createSync(width, height)
         this.img.colorAllocate(bkg[0],bkg[1],bkg[2]);
+    }
+
+    public setOutputDir(dir){
+        this.outputDir = dir
     }
 
     public getHeightOffset(){
@@ -53,9 +58,8 @@ export default class Writer{
             )
 
             Writer.imgCounter++
-            const num = String(Writer.imgCounter).padStart(3,'0')
-            const saveAs = `results/output${num}.png`
-
+            const num = String(Writer.imgCounter).padStart(4,'0')
+            const saveAs = `${this.outputDir}/output${num}.png`
             await tmpImg.savePng(saveAs, 1);
 
             imgs.push(saveAs)
