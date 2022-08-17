@@ -53,6 +53,7 @@ export default class Audio{
     save(file:string){
         execSync(`cp ${this.file} ${file}`)
         this.file = file
+        return this
     }
 
     toString(){

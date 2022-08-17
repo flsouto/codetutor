@@ -29,7 +29,7 @@ export default class VideoRenderer{
             save_as
         ].join(" ")
 
-        console.log("running cmd: ", cmd)
+    //    console.log("running cmd: ", cmd)
         execSync(cmd)
     }
 }

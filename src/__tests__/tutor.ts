@@ -26,14 +26,26 @@ describe("Tutor class", () => {
         expect(s2.dir).not.toBe(s1.dir)
     })
 
-    it(".write", async() => {
-        const str = "simple test"
-        const s = await t.write(str)
+    const testSection = (s:Section) => {
         s.imgs.forEach(img => expect(existsSync(img)).toBe(true))
-        const count = parseInt(execSync(`ls ${path.join(s.dir,"*.png")} | wc -l`).toString())
-        expect(count).toBe(str.length)
         expect(existsSync(s.audio.file)).toBe(true)
         expect(s.audio.file).toContain(s.dir)
         expect(s.audio.len).toBeGreaterThan(0)
+    }
+    it(".write", async() => {
+        const str = "simple test"
+        const s = await t.write(str)
+        const count = parseInt(execSync(`ls ${path.join(s.dir,"*.png")} | wc -l`).toString())
+        expect(count).toBe(str.length)
+        testSection(s)
+    })
+    it(".say", async()=>{
+        const s = await t.say("another test")
+        testSection(s)
+    })
+    it(".say and write", async()=>{
+        jest.setTimeout(20000)
+        const s = await t.say("let's define a function", "function test(){}")
+        testSection(s)
     })
 })

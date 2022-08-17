@@ -37,13 +37,21 @@ export default class Tutor{
         return sect
     }
 
-    async say(text, code = " "){
+    async say(text, code = null){
         const sect = this.createSection()
-        sect.audio = new Speaker().speak(text)
-            .addBackground("assets/keyboard-fx.wav",1)
-            .save(path.join(sect.dir,'audio.wav'))
+        let spk = new Speaker().speak(text)
+        if(code){
+            spk = spk.addBackground("assets/keyboard-fx.wav",1)
+        }
+        sect.audio = spk.audio.save(path.join(sect.dir,'audio.wav'))
         this.writer.setOutputDir(sect.dir)
-        sect.imgs = await this.writer.writeLn(code)
+        if(code){
+            sect.imgs = await this.writer.writeLn(code)
+        } else {
+            const frame = path.join(sect.dir, 'output.png')
+            await this.writer.img.savePng(frame, 1)
+            sect.imgs = [frame]
+        }
         return sect
     }
 
@@ -65,10 +73,12 @@ export class Section{
         const vr = new VideoRenderer()
         vr.setFrameRate(this.imgs.length/this.audio.len)
         vr.setAudio(this.audio)
+        const videof = path.join(this.dir, 'video.mp4')
         vr.render(
             path.join(this.dir, '*.png'),
-            path.join(this.dir, 'output.mp4')
+            videof
         )
+        return videof
     }
 }
 
