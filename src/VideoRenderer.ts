@@ -1,13 +1,13 @@
 import {execSync} from 'child_process'
-import {Spoken} from './Speaker'
+import Audio from './Audio'
 
 export default class VideoRenderer{
 
     private frameRate = 30
-    private audio
+    private audio : string|Audio
 
-    setAudio(audio:string|Spoken){
-        this.audio = audio instanceof Spoken ? audio.file : audio
+    setAudio(audio:string|Audio){
+        this.audio = audio
         return this
     }
 

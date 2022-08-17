@@ -2,7 +2,7 @@ import {execSync} from 'child_process'
 import {existsSync} from 'fs'
 
 export default class Audio{
-
+    file : string
     constructor(audio : string|Audio){
         this.file = audio instanceof Audio ? audio.file : audio
         if(!existsSync(this.file)){
