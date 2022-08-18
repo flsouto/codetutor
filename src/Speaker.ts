@@ -5,8 +5,9 @@ export default class Speaker{
 
     speak(text){
         const tmpf = Audio.tmpf
-        execSync(`echo "${text}" | text2wave > ${tmpf}`)
-        const audio = new Audio(tmpf).rate(44100)
+        const tmpf2 = Audio.tmpf
+        execSync(`echo "${text}" | text2wave > ${tmpf} && sox ${tmpf} -c 2 ${tmpf2}`)
+        const audio = new Audio(tmpf2).rate(44100)
         return new Spoken(text, audio)
     }
 

@@ -46,8 +46,10 @@ export default class Audio{
 
     remix(audio:string|Audio){
         const tmpf = Audio.tmpf
+        const tmpf2 = Audio.tmpf
         execSync(`sox -M ${audio} ${this.file} ${tmpf} remix -m 1,3,2,3`)
-        return new Audio(tmpf)
+        execSync(`sox ${tmpf} -c 2 ${tmpf2}`)
+        return new Audio(tmpf2)
     }
 
     save(file:string){

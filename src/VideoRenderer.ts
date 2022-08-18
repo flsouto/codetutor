@@ -1,5 +1,7 @@
 import {execSync} from 'child_process'
 import Audio from './Audio'
+import path from 'path'
+import {writeFileSync,existsSync} from 'fs'
 
 export default class VideoRenderer{
 
@@ -31,5 +33,13 @@ export default class VideoRenderer{
 
     //    console.log("running cmd: ", cmd)
         execSync(cmd)
+    }
+
+    static concat(videos : string[], output = 'results/concat.mkv'){
+        try{
+            const list = videos.join(' \\+ ')
+            execSync(`mkvmerge -o ${output} ${list}`)
+        } catch(e){
+        }
     }
 }

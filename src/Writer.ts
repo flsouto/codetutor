@@ -4,14 +4,14 @@ export default class Writer{
 
     public img: gd.Image
     public fontPath = '/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf'
-    public fontHeight = 25
-    public fontSize = 18
+    public fontHeight = 36
+    public fontSize = 28
     public lineNumber = 1
     public outputDir = 'results'
 
     static imgCounter = 0
 
-    constructor(public width=1200, public height=800, public bkg=[0,0,0]){
+    constructor(public width=720, public height=1280, public bkg=[10,20,30]){
         this.img = gd.createSync(width, height)
         this.img.colorAllocate(bkg[0],bkg[1],bkg[2]);
     }
@@ -28,6 +28,14 @@ export default class Writer{
         const clone = gd.createSync(this.width, this.height)
         this.img.copy(clone, 0,0,0,0, this.width, this.height)
         return clone
+    }
+
+    async writeBlock(block : string){
+        let imgs = []
+        for(const line of block.split("\n")){
+            imgs = imgs.concat(await this.writeLn(line))
+        }
+        return imgs
     }
 
     async writeLn(line: string) : Promise<string[]>{

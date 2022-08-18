@@ -30,7 +30,7 @@ export default class Tutor{
     async write(code, speed=.1){
         const sect = this.createSection()
         this.writer.setOutputDir(sect.dir)
-        sect.imgs = await this.writer.writeLn(code)
+        sect.imgs = await this.writer.writeBlock(code)
         const len = sect.imgs.length * speed
         sect.audio = new Audio("assets/keyboard-fx.wav").trim(0, len)
         sect.audio.save(path.join(sect.dir, "audio.wav"))
@@ -46,7 +46,7 @@ export default class Tutor{
         sect.audio = spk.audio.save(path.join(sect.dir,'audio.wav'))
         this.writer.setOutputDir(sect.dir)
         if(code){
-            sect.imgs = await this.writer.writeLn(code)
+            sect.imgs = await this.writer.writeBlock(code)
         } else {
             const frame = path.join(sect.dir, 'output.png')
             await this.writer.img.savePng(frame, 1)
@@ -56,8 +56,13 @@ export default class Tutor{
     }
 
     render(){
-        this.sections.forEach(s => s.render())
-        // todo merge using ffmpeg
+        const videos = []
+        this.sections.forEach(s => {
+            videos.push(s.render())
+        })
+        const merged = path.join(this.outputDir, 'final.mp4')
+        VideoRenderer.concat(videos, merged)
+        return merged
     }
 }
 
