@@ -60,7 +60,7 @@ export default class Writer{
                 this.fontPath,
                 this.fontSize,
                 0,
-                0,
+                5,
                 this.getHeightOffset(),
                 tmpLine
             )

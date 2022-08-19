@@ -1,31 +1,40 @@
-import VideoRenderer from './VideoRenderer'
-import Writer from './Writer'
-import Speaker from './Speaker'
-import {execSync} from 'child_process'
-
+import Tutor from './Tutor'
 async function main(){
 
-    let str: String = `<?php
-$loop1 = Sampler::select('loops-library/.wav');
-$loop1->fade(0,-30);
-`
-    const w = new Writer()
-    const imgs = []
-    for(const line of str.split("\n")){
-        const result = await w.writeLn(line)
-        imgs.push(...result)
-    }
+const t = new Tutor('results/jswebworkers')
+t.writer.fontHeight = 26
+t.writer.fontSize = 18
 
-    const spoken = new Speaker()
-        .speak("I'm going to show you guys how FL soulto uses programming to generate all the awesome loops that he is uploading to looperman. This is meant to be only a teaser, more explanations and details are coming soon, so make sure to subscribe and stay tuned! Bye-bye!")
-        .addBackground("assets/keyboard-fx.wav")
+await t.say(
+"web workers are real slaves that do heavy stuff in the background",
+"myWorker = new WebWorker('slave.js')"
+)
 
-    const vr = new VideoRenderer()
-    vr.setFrameRate(imgs.length/spoken.audio.len)
-    vr.setAudio(spoken.audio)
-    vr.render("results/*.png")
+await t.say(
+"You must send a message to the poor bastard telling it what to do",
+"myWorker.postMessage('build a pyramid')"
+)
+
+await t.say(
+"The result can be captured with the onmessage handler, no need to thank",
+`myWorker.onmessage = (result) => {
+    alert("Got a pyramid: "+result)
+}`
+)
+
+await t.say(
+"And here is how you define the script which perpetuates the slavery",
+`// slave.js
+module.onmessage = (command) => {
+    if(command == 'build a pyramid'){
+        const HUGE_PYRAMID = '/_\'
+        postMessage(HUGE_PYRAMID)
+	}
+}`
+)
+
+t.render()
 
 }
-
 main()
 
