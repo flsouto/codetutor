@@ -1,0 +1,10 @@
+services:
+    code-tutor:
+        image: flsouto/code-tutor2
+        stdin_open: true
+        tty: true
+        volumes:
+            - ./src:/app/src
+            - ./assets:/app/assets
+            - ./out:/app/out
+            - ./results:/app/results

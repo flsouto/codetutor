@@ -30,10 +30,11 @@ class ParserResult{
     ){
     }
 
-    inject(t:Tutor){
+    async injectInto(t:Tutor){
+        await t.wait(1)
         for(const p of this.pairs){
-            t.say(p.say)
-            t.write(p.write)
+            await t.say(p.say, p.write)
         }
+        await t.wait(2)
     }
 }

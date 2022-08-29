@@ -4,19 +4,24 @@ import Speaker from './Speaker'
 import Audio from './Audio'
 import {mkdirSync, existsSync} from 'fs'
 import path from 'path'
+import {execSync} from 'child_process'
 
 export default class Tutor{
 
     private sections : Section[] = []
     private writer : Writer
 
-    constructor(private outputDir : string){
+    assetsDir = 'assets'
+
+    constructor(private outputDir : string, w : Writer = null){
         if(!existsSync(outputDir)){
             mkdirSync(outputDir)
         }
-        this.writer = new Writer
+        this.writer = w || new Writer
     }
-
+    public clear(){
+        execSync(`rm ${path.join(this.outputDir,'*')} -Rf`)
+    }
     public createSection(){
         const dir = path.join(this.outputDir, `section${this.sections.length}`)
         if(!existsSync(dir)){
@@ -55,6 +60,29 @@ export default class Tutor{
         return sect
     }
 
+    async play(audioFile : string){
+        const audio = new Audio(path.join(this.assetsDir, audioFile))
+        return await this.wait(audio.len, audio)
+    }
+
+    async wait(time, audio : Audio = null){
+        const sect = this.createSection()
+        const cursor = this.writer.cloneImg()
+        const noncursor = this.writer.cloneImg()
+        this.writer.writeString(cursor,"▌",[255,255,255])
+        for(let i=0,j=0; i<time;i++,j+=2){
+            let imgf = `wait${j}.png`
+            await cursor.savePng(path.join(sect.dir, imgf),1)
+            sect.imgs.push(imgf)
+            imgf = `wait${j+1}.png`
+            await noncursor.savePng(path.join(sect.dir,imgf),1)
+            sect.imgs.push(imgf)
+        }
+        sect.audio = (audio || Audio.silence(time))
+            .save(path.join(sect.dir,'silence.wav'))
+        return sect
+    }
+
     render(){
         const videos = []
         this.sections.forEach(s => {
@@ -68,7 +96,7 @@ export default class Tutor{
 
 export class Section{
 
-    public imgs : string[]
+    public imgs : string[] = []
     public audio : Audio
 
     constructor(public dir : string){

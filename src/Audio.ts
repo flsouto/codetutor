@@ -15,6 +15,12 @@ export default class Audio{
         return `/tmp/${id}.wav`
     }
 
+    static silence(time){
+        const tmpf = Audio.tmpf
+        execSync(`sox -n -r 44100 -c 2 '${tmpf}' trim 0 ${time}`)
+        return new Audio(tmpf)
+    }
+
     add(audio:string|Audio){
         const newf = Audio.tmpf
         execSync(`sox ${this} ${audio} ${newf}`)

@@ -12,6 +12,8 @@ global.d = (msg) => {
 
 execSync(`rm ${DIR} -R`)
 
+jest.setTimeout(60000)
+
 describe("Tutor class", () => {
     const t = new Tutor(DIR)
     it("creates instance", () => {
@@ -47,5 +49,17 @@ describe("Tutor class", () => {
         jest.setTimeout(20000)
         const s = await t.say("let's define a function", "function test(){}")
         testSection(s)
+    })
+    it(".wait", async() => {
+        await t.say("This is a test","let test = true")
+        await t.wait(3)
+        await t.say("This is another test","let another = true")
+        await t.wait(3)
+        t.render()
+    })
+    it.only(".play", async() => {
+        await t.say("This is a test","let test = true")
+        await t.play("loop1.wav")
+        t.render()
     })
 })

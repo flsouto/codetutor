@@ -3,15 +3,15 @@ import * as gd from 'node-gd'
 export default class Writer{
 
     public img: gd.Image
-    public fontPath = '/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf'
-    public fontHeight = 36
+    public fontPath = 'assets/JetBrainsMono-Regular.ttf'
+    public fontHeight = 38
     public fontSize = 28
     public lineNumber = 1
     public outputDir = 'results'
-
+    public defaultTextColor = [0,255,0]
     static imgCounter = 0
 
-    constructor(public width=720, public height=1280, public bkg=[10,20,30]){
+    constructor(public width=720, public height=1280, public bkg=[0,0,0]){
         this.img = gd.createSync(width, height)
         this.img.colorAllocate(bkg[0],bkg[1],bkg[2]);
     }
@@ -38,6 +38,19 @@ export default class Writer{
         return imgs
     }
 
+    writeString(img:gd.Image, s:string, customColor:[int,int,int]=null){
+        const color = img.colorAllocate(...(customColor||this.defaultTextColor));
+        img.stringFT(
+            color,
+            this.fontPath,
+            this.fontSize,
+            0,
+            5,
+            this.getHeightOffset(),
+            s
+        )
+    }
+
     async writeLn(line: string) : Promise<string[]>{
 
         const imgs = []
@@ -52,18 +65,7 @@ export default class Writer{
             }
 
             tmpImg = this.cloneImg()
-
-            const color = tmpImg.colorAllocate(0, 255, 0);
-
-            tmpImg.stringFT(
-                color,
-                this.fontPath,
-                this.fontSize,
-                0,
-                5,
-                this.getHeightOffset(),
-                tmpLine
-            )
+            this.writeString(tmpImg, s)
 
             Writer.imgCounter++
             const num = String(Writer.imgCounter).padStart(4,'0')
