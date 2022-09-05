@@ -12,14 +12,20 @@ export default class TutorParser{
                     pair = {say:"", write:[]}
                 }
                 pair.say = line.substring(5)
-            } else {
+            } else if(line.substring(0,5)=="//pl ") {
+                if(pair.say.length||pair.write.length){
+                    pairs.push(pair)
+                    pair = {say:"", write:[]}
+                }
+                pairs.push({play: line.substring(5)})
+            } else if(line.length) {
                 pair.write.push(line)
             }
         }
         if(pair.say.length||pair.write.length){
             pairs.push(pair)
         }
-        pairs.forEach(p => p.write = p.write.join("\n"))
+        pairs.forEach(p => p.write = p.write?.join("\n"))
         return new ParserResult(pairs)
     }
 }
@@ -33,7 +39,11 @@ class ParserResult{
     async injectInto(t:Tutor){
         await t.wait(1)
         for(const p of this.pairs){
-            await t.say(p.say, p.write)
+            if(p.play){
+                await t.play(p.play)
+            } else {
+                await t.say(p.say, p.write)
+            }
         }
         await t.wait(2)
     }

@@ -9,14 +9,16 @@ describe("Parser class",()=>{
             "let variable = 1",
             "let variable2 = 2",
             "//sw and this is a function",
-            "function func(){ return variable; }"
+            "function func(){ return variable; }",
+            "//pl loop1.wav"
         ].join("\n")).pairs
-        expect(result.length).toBe(2)
+        expect(result.length).toBe(3)
         expect(result[0].say).toMatch(/variable/)
         expect(result[0].write).toMatch(/let/)
         expect(result[0].write).toMatch(/variable2/)
         expect(result[1].say).toMatch(/this is/)
         expect(result[1].write).toMatch(/return var/)
+        expect(result[2].play).toMatch(/loop1\.wav/)
     })
 
 })

@@ -78,8 +78,7 @@ export default class Tutor{
             await noncursor.savePng(path.join(sect.dir,imgf),1)
             sect.imgs.push(imgf)
         }
-        sect.audio = (audio || Audio.silence(time))
-            .save(path.join(sect.dir,'silence.wav'))
+        sect.audio = audio || Audio.silence(time).save(path.join(sect.dir,'silence.wav'))
         return sect
     }
 
